@@ -50,6 +50,7 @@ func (idx *index) fillIndex(clinicNames []string) {
 	}
 }
 
+// Search searches the index
 func (idx index) Search(text string) []int {
 	tokens := tokenize(text)
 

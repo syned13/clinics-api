@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -48,5 +49,6 @@ func TestIntersection(t *testing.T) {
 	b := []int{2, 3, 4}
 
 	inBoth := intersection(a, b)
+	sort.Ints(inBoth)
 	c.Equal([]int{2, 3}, inBoth)
 }
