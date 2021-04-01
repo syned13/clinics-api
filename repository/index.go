@@ -9,7 +9,6 @@ type index struct {
 
 func tokenize(text string) []string {
 	arr := strings.Fields(text)
-
 	return convertToLowerCase(arr)
 }
 
