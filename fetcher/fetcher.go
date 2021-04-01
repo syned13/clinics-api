@@ -12,7 +12,8 @@ import (
 	"github.com/syned13/clinics-api/models"
 )
 
-const baseURL = "https://storage.googleapis.com"
+// DefaultBaseURL default base URl for the API
+const DefaultBaseURL = "https://storage.googleapis.com"
 
 var (
 	clinicTypePaths = map[models.ClinicType]string{
@@ -36,6 +37,7 @@ var (
 	ErrInvalidURL = errors.New("invalid url")
 )
 
+// Fetcher represents the entity for fetching clinics
 type Fetcher interface {
 	FetchClinics(clinicType models.ClinicType) ([]models.Clinic, error)
 }
@@ -45,6 +47,7 @@ type clinicFetcher struct {
 	baseURL string
 }
 
+// NewFetcher returns a Fecther entity
 func NewFetcher(client client.Client, baseURL string) (Fetcher, error) {
 	_, err := url.ParseRequestURI(baseURL)
 	if err != nil {
@@ -79,7 +82,9 @@ func (c clinicFetcher) makeRequest(url string) ([]byte, error) {
 		return nil, fmt.Errorf("%w: %s", ErrCouldNotFetchClinics, err.Error())
 	}
 
-	defer response.Body.Close()
+	defer func() {
+		_ = response.Body.Close()
+	}()
 
 	if response.StatusCode != http.StatusOK {
 		return nil, ErrInvalidStatusCode

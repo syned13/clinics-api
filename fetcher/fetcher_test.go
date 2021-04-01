@@ -42,7 +42,8 @@ func TestFetchClinics(t *testing.T) {
 		clinicsB, err := json.Marshal(sampleClinics)
 		c.Nil(err)
 
-		rw.Write(clinicsB)
+		_, err = rw.Write(clinicsB)
+		c.Nil(err)
 	}))
 
 	defer server.Close()
@@ -64,7 +65,8 @@ func TestFetchClinicsError(t *testing.T) {
 		c.Equal(req.URL.Path, "/scratchpay-code-challenge/dental-clinics.json")
 
 		rw.WriteHeader(http.StatusInternalServerError)
-		rw.Write([]byte(""))
+		_, err := rw.Write([]byte(""))
+		c.Nil(err)
 	}))
 
 	defer server.Close()
