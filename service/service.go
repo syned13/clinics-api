@@ -21,7 +21,7 @@ var (
 
 var clinicsToFetch = []models.ClinicType{
 	models.ClinicTypeDental,
-	models.ClinicTypeVeterinary,
+	// models.ClinicTypeVeterinary,
 }
 
 type ClinicService interface {
@@ -99,7 +99,7 @@ func (s clinicService) UpdateClinicsFromAPI() error {
 		}
 	}
 
-	allClinics := []models.Clinic{}
+	allClinics := models.Clinics{}
 
 	for clinics := range clinicsChan {
 		allClinics = append(allClinics, clinics...)
