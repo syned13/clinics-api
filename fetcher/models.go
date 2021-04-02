@@ -6,12 +6,15 @@ import (
 	"github.com/syned13/clinics-api/models"
 )
 
+// Clinic represents clinics methods specific to the fetcher
 type Clinic interface {
 	ToClinic() models.Clinic
 }
 
+// VetClinics veterinary clinics list
 type VetClinics []VetClinic
 
+// VetClinic veterinary clinic entity
 type VetClinic struct {
 	Clinicname string `json:"clinicName"`
 	Statecode  string `json:"stateCode"`
@@ -21,8 +24,10 @@ type VetClinic struct {
 	} `json:"opening"`
 }
 
+// DentalClinics dental clinics list
 type DentalClinics []DentalClinic
 
+// DentalClinic dentail clinic entity
 type DentalClinic struct {
 	Name         string `json:"name"`
 	Statename    string `json:"stateName"`
@@ -32,7 +37,7 @@ type DentalClinic struct {
 	} `json:"availability"`
 }
 
-func (clinic VetClinic) ToClinic() models.Clinic {
+func (clinic VetClinic) toClinic() models.Clinic {
 	return models.Clinic{
 		Name:         clinic.Clinicname,
 		Statename:    clinic.Statecode,
@@ -40,7 +45,7 @@ func (clinic VetClinic) ToClinic() models.Clinic {
 	}
 }
 
-func (clinic DentalClinic) ToClinic() models.Clinic {
+func (clinic DentalClinic) toClinic() models.Clinic {
 	return models.Clinic{
 		Name:         clinic.Name,
 		Statename:    clinic.Statename,
@@ -59,7 +64,7 @@ func unmarshalVetClinics(clinicsB []byte) ([]models.Clinic, error) {
 	clinics := make([]models.Clinic, len(vetClinics))
 
 	for index, clinic := range vetClinics {
-		clinics[index] = clinic.ToClinic()
+		clinics[index] = clinic.toClinic()
 	}
 
 	return clinics, nil
@@ -76,7 +81,7 @@ func unmarshalDentalClinics(clinicsB []byte) ([]models.Clinic, error) {
 	clinics := make([]models.Clinic, len(dentalClinics))
 
 	for index, clinic := range dentalClinics {
-		clinics[index] = clinic.ToClinic()
+		clinics[index] = clinic.toClinic()
 	}
 
 	return clinics, nil

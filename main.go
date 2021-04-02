@@ -48,8 +48,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	l := log.Default()
-	l.Print("Done updating...")
+	fmt.Println("Done updating...")
 
 	// gocron.Every(1).Day().At("00:00").Do(service.)
 	err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)

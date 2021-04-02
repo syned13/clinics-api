@@ -29,6 +29,7 @@ func NewBadRequestError(msg string) ErrorResponse {
 	}
 }
 
+// NewNotFoundError returns an ErrorResponse with the not found values
 func NewNotFoundError(resourceName string) ErrorResponse {
 	message := "not found"
 	if resourceName != "" {

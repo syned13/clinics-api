@@ -21,6 +21,7 @@ func NewHandler(serv service.ClinicService) handler {
 	return handler{clinicService: serv}
 }
 
+// HandleGetClinics handles the get clinics request
 func (h handler) HandleGetClinics() http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")

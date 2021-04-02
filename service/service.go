@@ -24,6 +24,7 @@ var clinicsToFetch = []models.ClinicType{
 	models.ClinicTypeVeterinary,
 }
 
+// ClinicService groups the business-logic clinic functions
 type ClinicService interface {
 	GetClinics(name string, state string, from, to string) ([]models.Clinic, error)
 	UpdateClinics(clinics []models.Clinic) error
@@ -69,6 +70,7 @@ func validateGetClinicsInputs(state string, from, to string) error {
 	return nil
 }
 
+// UpdateClinics updates the clinics on the repository
 func (s clinicService) UpdateClinics(clinics []models.Clinic) error {
 	clinics = s.putStatesInLongForm(clinics)
 
@@ -87,6 +89,7 @@ func (s clinicService) putStatesInLongForm(clinics []models.Clinic) []models.Cli
 	return clinics
 }
 
+// UpdateClinicsFromAPI fetches the clinics from the API and updates them in the repository
 func (s clinicService) UpdateClinicsFromAPI() error {
 	clinics, err := s.fetchAllClinics()
 	if err != nil {
