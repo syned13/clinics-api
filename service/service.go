@@ -21,7 +21,7 @@ var (
 
 var clinicsToFetch = []models.ClinicType{
 	models.ClinicTypeDental,
-	// models.ClinicTypeVeterinary,
+	models.ClinicTypeVeterinary,
 }
 
 type ClinicService interface {
@@ -81,12 +81,12 @@ func (s clinicService) UpdateClinicsFromAPI() error {
 
 	for _, clinicType := range clinicsToFetch {
 		wg.Add(1)
-		go func() {
+		go func(clinicType models.ClinicType) {
 			clinics, err := s.fetcher.FetchClinics(clinicType)
 			errChan <- err
 			clinicsChan <- clinics
 			wg.Done()
-		}()
+		}(clinicType)
 	}
 
 	wg.Wait()

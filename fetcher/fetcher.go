@@ -1,7 +1,6 @@
 package fetcher
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -110,9 +109,7 @@ func (c clinicFetcher) FetchClinics(clinicType models.ClinicType) ([]models.Clin
 		return nil, err
 	}
 
-	clinics := models.Clinics{}
-
-	err = json.Unmarshal(body, &clinics)
+	clinics, err := unmarshalListOfClinics(body, clinicType)
 	if err != nil {
 		return nil, err
 	}
