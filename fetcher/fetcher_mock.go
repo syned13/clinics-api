@@ -5,7 +5,7 @@ import (
 	"github.com/syned13/clinics-api/models"
 )
 
-// FetcherMock entity for mocking Fetcher methods
+// MockFetcher entity for mocking Fetcher methods
 type MockFetcher struct {
 	mock.Mock
 }

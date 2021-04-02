@@ -5,7 +5,7 @@ import (
 	"github.com/syned13/clinics-api/models"
 )
 
-// RepositoryMock entity for mocking the Repository methods
+// MockRepository entity for mocking the Repository methods
 type MockRepository struct {
 	mock.Mock
 }

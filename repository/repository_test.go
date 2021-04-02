@@ -39,7 +39,8 @@ func TestUpdateClinics(t *testing.T) {
 
 	repo := clinicsRepository{}
 
-	repo.UpdateClinics(clinics)
+	err := repo.UpdateClinics(clinics)
+	c.Nil(err)
 	c.Equal(len(clinics), len(repo.sortedClinics))
 }
 
