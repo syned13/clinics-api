@@ -2,12 +2,18 @@
 
 API for fetching Clinics information
 
-### Running
-`go run main.go`
+### Prerequisites:
+ - Go 1.15 or later
+ - Docker (Docker engine min 20.10.2) 
+### Running with Docker
+
+`docker build -p {DESIRED_PORT}:5000 -t {DESIRED_TAG} .`
+
+`docker run {DESIRED_TAG}`
 
 ### Usage
 
-GET request to localhost:5000/clinics
+GET request to localhost:{DESIRED_PORT}/clinics
 
 Available query params:
  - name: clinic name
