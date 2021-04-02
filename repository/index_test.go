@@ -23,7 +23,7 @@ func TestNewIndex(t *testing.T) {
 		"Mayo Hospital",
 	}
 
-	index := NewIndex(clinicNames)
+	index := newIndex(clinicNames)
 	c.Equal([]int{0, 2}, index.pointers["mayo"])
 	c.Equal([]int{0, 1}, index.pointers["clinic"])
 }
@@ -37,7 +37,7 @@ func TestSearch(t *testing.T) {
 		"Mayo Hospital",
 	}
 
-	index := NewIndex(clinicNames)
+	index := newIndex(clinicNames)
 	results := index.Search("mayo")
 	c.Equal([]int{0, 2}, results)
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/syned13/clinics-api/utils"
 )
 
+// Repository defines the persistance methods for clinics
 type Repository interface {
 	GetClinics(name string, state string, from, to string) ([]models.Clinic, error)
 	UpdateClinics(clinics []models.Clinic) error
@@ -98,7 +99,7 @@ func (c *clinicsRepository) UpdateClinics(clinics []models.Clinic) error {
 
 	clinicNames := takeClinicNames(sortedClinics)
 
-	c.index = NewIndex(clinicNames)
+	c.index = newIndex(clinicNames)
 	c.sortedClinics = sortedClinics
 
 	return nil

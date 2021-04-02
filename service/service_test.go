@@ -12,8 +12,8 @@ import (
 func TestGetClinics(t *testing.T) {
 	c := require.New(t)
 
-	repo := repository.RepositoryMock{}
-	fetcher := fetcher.FetcherMock{}
+	repo := repository.MockRepository{}
+	fetcher := fetcher.MockFetcher{}
 
 	expectedClinics := []models.Clinic{
 		{

@@ -8,6 +8,7 @@ import (
 	"github.com/syned13/clinics-api/shared/httputils"
 )
 
+// Handler defines the handle requests functions
 type Handler interface {
 	HandleGetClinics() http.HandlerFunc
 }
@@ -17,7 +18,7 @@ type handler struct {
 }
 
 // NewHandler returns a new http handler entity
-func NewHandler(serv service.ClinicService) handler {
+func NewHandler(serv service.ClinicService) Handler {
 	return handler{clinicService: serv}
 }
 
