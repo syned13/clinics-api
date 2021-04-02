@@ -75,7 +75,8 @@ func TestGetClinics(t *testing.T) {
 	}
 
 	repo := NewClinicRepository()
-	repo.UpdateClinics(clinics)
+	err := repo.UpdateClinics(clinics)
+	c.Nil(err)
 
 	gottenClinics, _ := repo.GetClinics("clinic", "", "", "")
 	c.Len(gottenClinics, 2)
