@@ -88,6 +88,20 @@ func (s clinicService) putStatesInLongForm(clinics []models.Clinic) []models.Cli
 }
 
 func (s clinicService) UpdateClinicsFromAPI() error {
+	clinics, err := s.fetchAllClinics()
+	if err != nil {
+		return err
+	}
+
+	err = s.UpdateClinics(clinics)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s clinicService) fetchAllClinics() ([]models.Clinic, error) {
 	errChan := make(chan error, len(clinicsToFetch))
 	clinicsChan := make(chan []models.Clinic, len(clinicsToFetch))
 
@@ -95,12 +109,7 @@ func (s clinicService) UpdateClinicsFromAPI() error {
 
 	for _, clinicType := range clinicsToFetch {
 		wg.Add(1)
-		go func(clinicType models.ClinicType) {
-			clinics, err := s.fetcher.FetchClinics(clinicType)
-			errChan <- err
-			clinicsChan <- clinics
-			wg.Done()
-		}(clinicType)
+		go s.fetchClinics(clinicType, errChan, clinicsChan, &wg)
 	}
 
 	wg.Wait()
@@ -109,7 +118,7 @@ func (s clinicService) UpdateClinicsFromAPI() error {
 
 	for err := range errChan {
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
 
@@ -119,10 +128,14 @@ func (s clinicService) UpdateClinicsFromAPI() error {
 		allClinics = append(allClinics, clinics...)
 	}
 
-	err := s.UpdateClinics(allClinics)
-	if err != nil {
-		return err
-	}
+	return allClinics, nil
+}
 
-	return nil
+func (s clinicService) fetchClinics(clinicType models.ClinicType, errChan chan error, clinicsChan chan []models.Clinic, wg *sync.WaitGroup) {
+	clinics, err := s.fetcher.FetchClinics(clinicType)
+
+	errChan <- err
+	clinicsChan <- clinics
+
+	wg.Done()
 }
