@@ -19,7 +19,10 @@ var port string
 const defaultPort = "5000"
 
 func init() {
-	gotenv.Load()
+	err := gotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	port = os.Getenv("PORT")
 	if port == "" {
