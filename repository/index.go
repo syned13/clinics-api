@@ -24,14 +24,14 @@ func convertToLowerCase(arr []string) []string {
 
 // NewIndex returns a new inverted index
 func NewIndex(clinicNames []string) index {
-	index := index{
+	idx := index{
 		pointers: map[string][]int{},
 		items:    clinicNames,
 	}
 
-	index.fillIndex(clinicNames)
+	idx.fillIndex(clinicNames)
 
-	return index
+	return idx
 }
 
 func (idx *index) fillIndex(clinicNames []string) {
