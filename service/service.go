@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"sync"
 
 	"github.com/syned13/clinics-api/fetcher"
 	"github.com/syned13/clinics-api/models"
@@ -18,9 +19,15 @@ var (
 	ErrMissingTime = errors.New("missing time")
 )
 
+var clinicsToFetch = []models.ClinicType{
+	models.ClinicTypeDental,
+	models.ClinicTypeVeterinary,
+}
+
 type ClinicService interface {
 	GetClinics(name string, state string, from, to string) ([]models.Clinic, error)
 	UpdateClinics(clinics []models.Clinic) error
+	UpdateClinicsFromAPI() error
 }
 
 type clinicService struct {
@@ -64,4 +71,44 @@ func validateGetClinicsInputs(state string, from, to string) error {
 
 func (s clinicService) UpdateClinics(clinics []models.Clinic) error {
 	return s.repo.UpdateClinics(clinics)
+}
+
+func (s clinicService) UpdateClinicsFromAPI() error {
+	errChan := make(chan error, len(clinicsToFetch))
+	clinicsChan := make(chan []models.Clinic, len(clinicsToFetch))
+
+	wg := sync.WaitGroup{}
+
+	for _, clinicType := range clinicsToFetch {
+		wg.Add(1)
+		go func() {
+			clinics, err := s.fetcher.FetchClinics(clinicType)
+			errChan <- err
+			clinicsChan <- clinics
+			wg.Done()
+		}()
+	}
+
+	wg.Wait()
+	close(errChan)
+	close(clinicsChan)
+
+	for err := range errChan {
+		if err != nil {
+			return err
+		}
+	}
+
+	allClinics := []models.Clinic{}
+
+	for clinics := range clinicsChan {
+		allClinics = append(allClinics, clinics...)
+	}
+
+	err := s.UpdateClinics(allClinics)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

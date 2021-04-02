@@ -110,7 +110,7 @@ func (c clinicFetcher) FetchClinics(clinicType models.ClinicType) ([]models.Clin
 		return nil, err
 	}
 
-	var clinics models.Clinics
+	clinics := models.Clinics{}
 
 	err = json.Unmarshal(body, &clinics)
 	if err != nil {
