@@ -1,22 +1,22 @@
 package service
 
 import (
-	"errors"
 	"sync"
 
 	"github.com/syned13/clinics-api/fetcher"
 	"github.com/syned13/clinics-api/models"
 	"github.com/syned13/clinics-api/repository"
+	"github.com/syned13/clinics-api/shared/httputils"
 	"github.com/syned13/clinics-api/utils"
 )
 
 var (
 	// ErrInvalidState invalid state
-	ErrInvalidState = errors.New("invalid state")
+	ErrInvalidState = httputils.NewBadRequestError("invalid state")
 	// ErrInvalidTime invalid time
-	ErrInvalidTime = errors.New("invalid time")
+	ErrInvalidTime = httputils.NewBadRequestError("invalid time")
 	// ErrMissingTime missing time
-	ErrMissingTime = errors.New("missing time")
+	ErrMissingTime = httputils.NewBadRequestError("missing time")
 )
 
 var clinicsToFetch = []models.ClinicType{
@@ -50,14 +50,14 @@ func (s clinicService) GetClinics(name string, state string, from, to string) ([
 		return nil, err
 	}
 
+	if state != "" && len(state) == 2 {
+		state = models.States[state]
+	}
+
 	return s.repo.GetClinics(name, state, from, to)
 }
 
 func validateGetClinicsInputs(state string, from, to string) error {
-	if state != "" && models.States[state] == "" {
-		return ErrInvalidState
-	}
-
 	if from != "" && !utils.ValidateHour(from) {
 		return ErrInvalidTime
 	}
@@ -70,7 +70,21 @@ func validateGetClinicsInputs(state string, from, to string) error {
 }
 
 func (s clinicService) UpdateClinics(clinics []models.Clinic) error {
+	clinics = s.putStatesInLongForm(clinics)
+
 	return s.repo.UpdateClinics(clinics)
+}
+
+func (s clinicService) putStatesInLongForm(clinics []models.Clinic) []models.Clinic {
+	for index, clinic := range clinics {
+		if len(clinic.Statename) > 2 {
+			continue
+		}
+
+		clinics[index].Statename = models.States[clinic.Statename]
+	}
+
+	return clinics
 }
 
 func (s clinicService) UpdateClinicsFromAPI() error {
